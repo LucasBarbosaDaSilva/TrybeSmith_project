@@ -12,15 +12,15 @@ describe('POST /products', function () {
 
   it('Create a product sucess', async function () {
 
-    const createReturn = ProductModel.build(productMock.productFullInfo);
-    sinon.stub(ProductModel, 'create').resolves(createReturn);
+    const response = ProductModel.build(productMock.completProduct);
+    sinon.stub(ProductModel, 'create').resolves(response);
 
-    const httpRequestBody = productMock.productFullInfo;
+    const requestHttp = productMock.completProduct;
 
-    const httpResponse = await chai.request(app).post('/products').send(httpRequestBody);
+    const httpResponse = await chai.request(app).post('/products').send(requestHttp);
 
     expect(httpResponse.status).to.equal(201);
-    expect(httpResponse.body).to.be.deep.equal(productMock.productFullInfo);
+    expect(httpResponse.body).to.be.deep.equal(productMock.completProduct);
 
   });
 });

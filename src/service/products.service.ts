@@ -1,15 +1,25 @@
-import ProductModel, { ProductInputtableTypes } from '../database/models/product.model';
+import ProductModel, 
+{ ProductInputtableTypes, ProductSequelizeModel } from '../database/models/product.model';
 import { Product } from '../types/Product';
 import { ServiceResponse } from '../types/ResponsesTypes';
+
+async function getAllProducts(): Promise<ServiceResponse<ProductSequelizeModel[]>> {
+  const products = await ProductModel.findAll();
+
+  return {
+    status: 'OK',
+    data: products,
+  };
+}
 
 function validateProduct({
   name,
   price,
   orderId,
 }: ProductInputtableTypes) : string | null {
-  if (!name) return 'name is required';
-  if (!price) return 'price is required';
-  if (!orderId) return 'orderId is required';
+  if (!name) return '"name" is required';
+  if (!price) return '"price" is required';
+  if (!orderId) return '"orderId" is required';
   return null;
 }
 
@@ -35,4 +45,5 @@ async function createProduct(product: ProductInputtableTypes): Promise<ServiceRe
 
 export default {
   createProduct,
+  getAllProducts,
 };

@@ -20,7 +20,7 @@ const productWithoutOrderId: Product = {
     orderId : 0,
 }
 
-const productFullInfo: Product = {
+const completProduct: Product = {
     id: 1,
     name: 'Machado do Thor',
     price: '30 peças de ouro',
@@ -31,5 +31,5 @@ export default {
     productNoName,
     productWithoutPrice,
     productWithoutOrderId,
-    productFullInfo,
+    completProduct,
 };
