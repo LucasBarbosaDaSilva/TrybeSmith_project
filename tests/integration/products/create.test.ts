@@ -35,4 +35,16 @@ describe('POST /products', function () {
   
     }
   );
+
+  it('Create a product without price', async function () {
+        
+        const requestHttp = productMock.withoutPrice;
+    
+        const httpResponse = await chai.request(app).post('/products').send(requestHttp);
+    
+        expect(httpResponse.status).to.equal(400);
+        expect(httpResponse.body).to.be.deep.equal({ message: '"price" is required' });
+    
+      }
+  );
 });
