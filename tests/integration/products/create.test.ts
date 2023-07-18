@@ -23,4 +23,16 @@ describe('POST /products', function () {
     expect(httpResponse.body).to.be.deep.equal(productMock.completProduct);
 
   });
+
+  it('Create a product without name', async function () {
+      
+      const requestHttp = productMock.withouName;
+  
+      const httpResponse = await chai.request(app).post('/products').send(requestHttp);
+  
+      expect(httpResponse.status).to.equal(400);
+      expect(httpResponse.body).to.be.deep.equal({ message: '"name" is required' });
+  
+    }
+  );
 });
