@@ -29,7 +29,24 @@ const productList = [
 	}
 ]
 
+const withouName: Product = {
+	id: 1,
+	name: '',
+	price: '30 peças de ouro',
+	orderId : 4,
+}
+
+const withoutPrice: Product = {
+	id: 1,
+	name: 'Machado do Thor',
+	price: '',
+	orderId : 4,
+}
+
+
 export default {
     completProduct,
-    productList
+    productList,
+		withouName,
+		withoutPrice
 };

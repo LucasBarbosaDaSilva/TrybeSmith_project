@@ -1,7 +1,21 @@
 export type User = {
-  id: 'fake';
-  username: 'fake';
-  vocation: 'fake';
-  level: 'fake';
-  password: 'fake';
+  id: number;
+  username: string;
+  vocation: string;
+  level: number;
+  password: string;
+};
+
+export type UserLogin = {
+  username: string;
+  password: string;
+};
+
+export type Token = {
+  token: string;
+};
+
+export type TokenPayload = {
+  id: number;
+  username: string;
 };
