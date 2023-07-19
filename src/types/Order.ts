@@ -1,5 +1,5 @@
 export type Order = {
   id: number;
   userId: number;
-  productId: number[] | undefined;
+  productIds: number[] | undefined;
 };

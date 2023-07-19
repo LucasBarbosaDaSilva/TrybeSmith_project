@@ -8,10 +8,9 @@ async function getAllOrders(_req: Request, res: Response) : Promise<Response> {
 }
 
 async function createOrder(req: Request, res: Response) : Promise<Response> {
-  const { userId, productId } = req.body;
-  const serviceResponse = await ordersService.createOrder(userId, productId);
-
-  return res.status(201).json(serviceResponse);
+  const { productIds, userId } = req.body;
+  const order = await ordersService.createOrder(productIds, userId);
+  return res.status(201).json(order);
 }
 
 export default {

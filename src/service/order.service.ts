@@ -17,16 +17,19 @@ async function getAllOrders(): Promise<ServiceResponse<OrderSequelizeModel[]>> {
   return { status: 'OK', data: orders };
 }
 
-async function createOrder(userId: number, productId: number[]): 
-Promise<Optional<Order, 'id'>> { 
-  const order = await OrderModel.create({ userId, productId });
+async function createOrder(productIds: number[], userId: number):
+Promise<Optional<Order, 'id'>> {
+  const create = await OrderModel.create({ userId, productIds });
   await ProductModel.update(
-    { orderId: order.dataValues.id },
-    { where: { id: { [Op.in]: productId } } },
+    { orderId: create.dataValues.id },
+    { where: { 
+      id: { [Op.in]: productIds }, 
+    },
+    },
   );
   return {
-    userId: order.dataValues.userId,
-    productId,
+    userId: create.dataValues.userId,
+    productIds,
   };
 }
 
