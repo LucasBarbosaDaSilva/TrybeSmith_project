@@ -44,4 +44,16 @@ describe('POST /login', function () {
               
     });
 
+  it('If password no exist in body', async function () {
+      
+      const response = loginMock.noExistPassword;
+      sinon.stub(UserModel, 'findOne').resolves(null);
+  
+      const requestHttp = await chai.request(app).post('/login').send(response);
+  
+      expect(requestHttp.status).to.equal(401);
+      expect(requestHttp.body).to.be.deep.equal({ message: 'Username or password invalid' });
+                
+      });
+
 });
