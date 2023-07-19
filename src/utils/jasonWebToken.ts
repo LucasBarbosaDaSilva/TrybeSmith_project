@@ -11,7 +11,7 @@ function generateToken(payload: TokenPayload): string {
   return jwt.sign(payload, secret, jwtConifg);
 }
 
-export function verifyToken(token: string): TokenPayload {
+function verifyToken(token: string): TokenPayload {
   return jwt.verify(token, secret) as TokenPayload;
 }
 
