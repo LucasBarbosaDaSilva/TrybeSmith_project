@@ -101,5 +101,12 @@ describe('POST /products', function () {
                             expect(httpResponse.body).to.be.deep.equal({ message: '"price" must be a string' });
                         
                           });
-  
+  it('Testa camada service' , async function () {
+    const response = ProductModel.build(productMock.completProduct);
+    sinon.stub(ProductModel, 'create').resolves(response);
+    const requestHttp = productMock.completProduct;
+    const httpResponse = await chai.request(app).post('/products').send(requestHttp);
+    expect(httpResponse.status).to.equal(201);
+    expect(httpResponse.body).to.be.deep.equal(productMock.completProduct);
+  });
 });

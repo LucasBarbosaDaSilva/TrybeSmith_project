@@ -18,10 +18,16 @@ const noExistPassword = {
   password: 'test123_test',
 };
 
+const userValid = {
+  username: 'test',
+  password: 'test123',
+};
+
 
 export default {
   noUserValid,
   noPasswordValid,
   noExistUser,
   noExistPassword,
+  userValid,
 };

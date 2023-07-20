@@ -69,6 +69,15 @@ describe('POST /orders', function () {
     expect(response.body.message).to.be.equal('"userId" must be a number');
   });
 
+  it('Return erro if productIds is empty', async function () {
+    const token = jasonWebToken.generateToken({ id: 1, username: 'test' });
+    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.productIdsArrayOff);
+
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.be.an('object');
+    expect(response.body.message).to.be.equal('"productIds" must include only numbers');
+  });
+
 
   it('Return withou token', async function () {
     const response = await chai.request(app).post('/orders').send(orderMock.newOrder);

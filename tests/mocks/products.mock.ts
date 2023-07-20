@@ -1,6 +1,12 @@
 import { Product } from '../../src/types/Product';
 
 
+const invalidProduct = {
+		names: 2,
+		prices: 2,
+		orderIds: 2,
+}
+
 const completProduct: Product = {
     id: 1,
     name: 'Machado do Thor',
@@ -88,5 +94,6 @@ export default {
 		nameLength,
 		nameNotString,
 		priceLength,
-		priceNotString
+		priceNotString,
+		invalidProduct,
 };

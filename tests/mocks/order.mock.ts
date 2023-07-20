@@ -42,6 +42,12 @@ const userIdIsNotNumber = {
 };
 
 
+const productIdsArrayOff = {
+  productIds: [ ],
+  userId: 1,
+};
+
+
 export default {
   orderList,
   newOrderWithouUserId,
@@ -50,4 +56,5 @@ export default {
   newOrderWithouProductsId,
   productIdsIsNotArray,
   userIdIsNotNumber,
+  productIdsArrayOff,
 };
