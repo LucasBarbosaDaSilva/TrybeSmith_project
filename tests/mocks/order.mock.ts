@@ -31,6 +31,16 @@ const newOrderWithouProductsId = {
   userId: 1,
 };
 
+const productIdsIsNotArray = {
+  productIds: 1,
+  userId: 1,
+};
+
+const userIdIsNotNumber = {
+  productIds: [1, 2, 3],
+  userId: '1',
+};
+
 
 export default {
   orderList,
@@ -38,4 +48,6 @@ export default {
   newOrder,
   sucessOrder,
   newOrderWithouProductsId,
+  productIdsIsNotArray,
+  userIdIsNotNumber,
 };
