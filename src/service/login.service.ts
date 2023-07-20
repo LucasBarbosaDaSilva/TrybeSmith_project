@@ -16,8 +16,8 @@ async function login(user: UserLogin): Promise<ServiceResponse<Token>> {
     return { status: 'UNAUTHORIZED', data: { message: 'Username or password invalid' },
     };
   }
-  const { id, username } = findUser.dataValues;
-  const token = jasonWebToken.generateToken({ id, username });
+  const { password, username } = findUser.dataValues;
+  const token = jasonWebToken.generateToken({ password, username });
   return { status: 'OK', data: { token } };
 }
 

@@ -15,7 +15,10 @@ describe('POST /orders', function () {
   beforeEach(function () { sinon.restore(); });
 
   it('Create a order', async function () {
-    const token = jasonWebToken.generateToken({ id: 1, username: 'test' });
+    // const token = jasonWebToken.generateToken({ id: 1, username: 'test' });
+    // console.log('TOKEN AQUI !!!',token);
+    // sinon.stub(jwt, 'verify').resolves({ id: 1 });
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJIYWdhciIsImlhdCI6MTY4Njc1NDc1Nn0.jqAuJkcLp0RuvrOd4xKxtj_lm3Z3-73gQQ9IVmwE5gA';
     const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.newOrder);
 
     expect(response.status).to.be.equal(201);
@@ -25,7 +28,8 @@ describe('POST /orders', function () {
   });
 
   it('Create a order with invalid token', async function () {
-    const token = jasonWebToken.generateToken({ id: 1, username: 'test' });
+    const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
+    console.log('TOKEN AQUI !!!',token);
     const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}1`).send(orderMock.newOrder);
 
     expect(response.status).to.be.equal(401);
@@ -34,7 +38,7 @@ describe('POST /orders', function () {
   });
 
   it('Create a order without userId', async function () {
-    const token = jasonWebToken.generateToken({ id: 1, username: 'test' });
+    const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
     const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.newOrderWithouUserId);
 
     expect(response.status).to.be.equal(400);
@@ -43,7 +47,8 @@ describe('POST /orders', function () {
   });
 
   it('Create a order without productsId', async function () {
-    const token = jasonWebToken.generateToken({ id: 1, username: 'test' });
+    // const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJIYWdhciIsImlhdCI6MTY4Njc1NDc1Nn0.jqAuJkcLp0RuvrOd4xKxtj_lm3Z3-73gQQ9IVmwE5gA';
     const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.newOrderWithouProductsId);
 
     expect(response.status).to.be.equal(400);
@@ -52,7 +57,9 @@ describe('POST /orders', function () {
   });
 
   it('Create a order with productIds not array', async function () {
-    const token = jasonWebToken.generateToken({ id: 1, username: 'test' });
+    const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
+    // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsInVzZXJuYW1lIjoiam9obiBkb2UiLCJyb2xlIjoidXNlciJ9.RG4aOYq6k7gUv-euQJzEQtUz0nvR9zY6FpimWk2WGFA';
+
     const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.productIdsIsNotArray);
 
     expect(response.status).to.be.equal(422);
@@ -61,7 +68,8 @@ describe('POST /orders', function () {
   });
 
   it('Create a order with userId not number', async function () {
-    const token = jasonWebToken.generateToken({ id: 1, username: 'test' });
+    // const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJIYWdhciIsImlhdCI6MTY4Njc1NDc1Nn0.jqAuJkcLp0RuvrOd4xKxtj_lm3Z3-73gQQ9IVmwE5gA';
     const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.userIdIsNotNumber);
 
     expect(response.status).to.be.equal(422);
@@ -69,15 +77,16 @@ describe('POST /orders', function () {
     expect(response.body.message).to.be.equal('"userId" must be a number');
   });
 
-  it('Return erro if productIds is empty', async function () {
-    const token = jasonWebToken.generateToken({ id: 1, username: 'test' });
+  it('Create a order with productIds not number', async function () {
+    // const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJIYWdhciIsImlhdCI6MTY4Njc1NDc1Nn0.jqAuJkcLp0RuvrOd4xKxtj_lm3Z3-73gQQ9IVmwE5gA';
     const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.productIdsArrayOff);
-
+    
     expect(response.status).to.be.equal(422);
     expect(response.body).to.be.an('object');
     expect(response.body.message).to.be.equal('"productIds" must include only numbers');
   });
-
+  
 
   it('Return withou token', async function () {
     const response = await chai.request(app).post('/orders').send(orderMock.newOrder);

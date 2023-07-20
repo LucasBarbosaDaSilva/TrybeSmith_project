@@ -16,6 +16,7 @@ export type Token = {
 };
 
 export type TokenPayload = {
-  id: number;
+  
   username: string;
+  password: string;
 };
