@@ -41,6 +41,13 @@ const userIdIsNotNumber = {
   userId: '1',
 };
 
+const orderId = {
+  orderId : 4,
+  name: 'teste',
+  price: 'teste',
+  id: 4,
+};
+
 
 const productIdsArrayOff = {
   productIds: [ ],
@@ -57,4 +64,5 @@ export default {
   productIdsIsNotArray,
   userIdIsNotNumber,
   productIdsArrayOff,
+  orderId,
 };

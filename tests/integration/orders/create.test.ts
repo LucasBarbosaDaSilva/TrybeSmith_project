@@ -6,20 +6,33 @@ import orderMock from '../../mocks/order.mock';
 import jasonWebToken from '../../../src/utils/jasonWebToken';
 import jwt from 'jsonwebtoken';
 import { TokenPayload } from '../../../src/types/User';
+import OrderModel from '../../../src/database/models/order.model';
+import ProductModel from '../../../src/database/models/product.model';
+import UserModel from '../../../src/database/models/user.model';
+import bcrypt from 'bcryptjs';
 
 
 
 chai.use(chaiHttp);
+let requestHttp: any;
 
 describe('POST /orders', function () {
-  beforeEach(function () { sinon.restore(); });
+  beforeEach(async function () {
+    
+    sinon.restore();
+    const login = { id: 1, level: 3, password: bcrypt.hashSync('batata', 10), username: 'batatinha', vocation: 'manager' } ;
+    const newresponse = UserModel.build(login);
+    sinon.stub(UserModel, 'findOne').resolves(newresponse);
+
+    requestHttp = await chai.request(app).post('/login').send({username: 'batatinha', password: 'batata'});
+   });
 
   it('Create a order', async function () {
-    // const token = jasonWebToken.generateToken({ id: 1, username: 'test' });
-    // console.log('TOKEN AQUI !!!',token);
-    // sinon.stub(jwt, 'verify').resolves({ id: 1 });
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJIYWdhciIsImlhdCI6MTY4Njc1NDc1Nn0.jqAuJkcLp0RuvrOd4xKxtj_lm3Z3-73gQQ9IVmwE5gA';
-    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.newOrder);
+    const result = OrderModel.build(orderMock.newOrder);
+    sinon.stub(OrderModel, 'create').resolves(result);
+    sinon.stub(ProductModel, 'update').resolves();
+
+    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${requestHttp.body.token}`).send(orderMock.newOrder);
 
     expect(response.status).to.be.equal(201);
     expect(response.body).to.be.an('object');
@@ -28,9 +41,11 @@ describe('POST /orders', function () {
   });
 
   it('Create a order with invalid token', async function () {
-    const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
-    console.log('TOKEN AQUI !!!',token);
-    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}1`).send(orderMock.newOrder);
+
+    const result = OrderModel.build(orderMock.newOrder);
+    sinon.stub(OrderModel, 'create').resolves(result);
+ 
+    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${requestHttp.body.token}1`).send(orderMock.newOrder);
 
     expect(response.status).to.be.equal(401);
     expect(response.body).to.be.an('object');
@@ -38,8 +53,8 @@ describe('POST /orders', function () {
   });
 
   it('Create a order without userId', async function () {
-    const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
-    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.newOrderWithouUserId);
+  
+    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${requestHttp.body.token}`).send(orderMock.newOrderWithouUserId);
 
     expect(response.status).to.be.equal(400);
     expect(response.body).to.be.an('object');
@@ -47,9 +62,9 @@ describe('POST /orders', function () {
   });
 
   it('Create a order without productsId', async function () {
-    // const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJIYWdhciIsImlhdCI6MTY4Njc1NDc1Nn0.jqAuJkcLp0RuvrOd4xKxtj_lm3Z3-73gQQ9IVmwE5gA';
-    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.newOrderWithouProductsId);
+  
+    
+    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${requestHttp.body.token}`).send(orderMock.newOrderWithouProductsId);
 
     expect(response.status).to.be.equal(400);
     expect(response.body).to.be.an('object');
@@ -57,10 +72,8 @@ describe('POST /orders', function () {
   });
 
   it('Create a order with productIds not array', async function () {
-    const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
-    // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsInVzZXJuYW1lIjoiam9obiBkb2UiLCJyb2xlIjoidXNlciJ9.RG4aOYq6k7gUv-euQJzEQtUz0nvR9zY6FpimWk2WGFA';
-
-    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.productIdsIsNotArray);
+   
+    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${requestHttp.body.token}`).send(orderMock.productIdsIsNotArray);
 
     expect(response.status).to.be.equal(422);
     expect(response.body).to.be.an('object');
@@ -68,9 +81,8 @@ describe('POST /orders', function () {
   });
 
   it('Create a order with userId not number', async function () {
-    // const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJIYWdhciIsImlhdCI6MTY4Njc1NDc1Nn0.jqAuJkcLp0RuvrOd4xKxtj_lm3Z3-73gQQ9IVmwE5gA';
-    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.userIdIsNotNumber);
+ ;
+    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${requestHttp.body.token}`).send(orderMock.userIdIsNotNumber);
 
     expect(response.status).to.be.equal(422);
     expect(response.body).to.be.an('object');
@@ -78,9 +90,8 @@ describe('POST /orders', function () {
   });
 
   it('Create a order with productIds not number', async function () {
-    // const token = jasonWebToken.generateToken({ password: 'teste', username: 'test' });
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJIYWdhciIsImlhdCI6MTY4Njc1NDc1Nn0.jqAuJkcLp0RuvrOd4xKxtj_lm3Z3-73gQQ9IVmwE5gA';
-    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${token}`).send(orderMock.productIdsArrayOff);
+   
+    const response = await chai.request(app).post('/orders').set('Authorization', `Bearer ${requestHttp.body.token}`).send(orderMock.productIdsArrayOff);
     
     expect(response.status).to.be.equal(422);
     expect(response.body).to.be.an('object');
